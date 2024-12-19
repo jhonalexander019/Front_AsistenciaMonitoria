@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AdminRemoteDataSource {
-  final String baseUrl = 'http://192.168.1.1:8080';
+  final String baseUrl = 'http://192.168.1.3:8080';
 
   Future<Map<String, dynamic>> listMonitorsPerDay(String day) async {
   final Uri url = Uri.parse('$baseUrl/monitores/listarPorDia?dia=$day');
@@ -14,7 +14,7 @@ class AdminRemoteDataSource {
     if (response.statusCode == 200) {
       return jsonDecode(utf8.decode(response.bodyBytes));
     } else {
-      throw Exception('Error en el inicio de sesión: Credenciales incorrectas');
+      throw Exception("Error al obtener los monitores del día");
     }
   }
 
@@ -26,9 +26,8 @@ class AdminRemoteDataSource {
     );
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
-    } else {
-      throw Exception('Error en el inicio de sesión: Credenciales incorrectas');
+    }else{
+      throw Exception("Error al obtener los monitores en progreso");
     }
   }
-
 }

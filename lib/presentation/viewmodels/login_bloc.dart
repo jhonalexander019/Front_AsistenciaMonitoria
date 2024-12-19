@@ -31,10 +31,6 @@ class LoginBloc with ChangeNotifier {
 
       Provider.of<StorageBloc>(context, listen: false).saveUser(user.toJson());
 
-      _isLoading = false;
-      notifyListeners();
-      
-      // Redirigir según el rol del usuario
       Widget nextScreen =
           user.rol == 'Monitor' ? const MonitorScreen() : const AdminScreen();
 
@@ -46,8 +42,11 @@ class LoginBloc with ChangeNotifier {
     } catch (e) {
       errorMessage = e.toString().replaceAll('Exception: ', '');
       _clearMessageAfterDelay();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-    notifyListeners();
+
   }
 
   void _clearMessageAfterDelay() {

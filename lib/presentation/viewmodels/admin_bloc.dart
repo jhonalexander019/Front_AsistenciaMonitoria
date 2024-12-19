@@ -5,14 +5,12 @@ import '../../domain/usecases/admin_usecase.dart';
 class AdminBloc extends ChangeNotifier {
   final AdminUseCase adminUsecase;
 
-  // Estados internos
   bool _isLoadingMonitorPerDay = true;
   bool _isLoadingProgressMonitor = true;
   Map<String, dynamic>? _monitorPerDay;
   List<dynamic>? _progressMonitors;
   String? errorMessage;
 
-  // Getters públicos
   bool get isLoadingMonitorPerDay => _isLoadingMonitorPerDay;
   bool get isLoadingProgressMonitor => _isLoadingProgressMonitor;
   Map<String, dynamic>? get monitorPerDay => _monitorPerDay;
@@ -24,12 +22,10 @@ class AdminBloc extends ChangeNotifier {
     final dayOfWeek = _getDayOfWeek();
 
     try {
-      //
       if ( dayOfWeek == 'Sábado' || dayOfWeek == 'Domingo') {
         _monitorPerDay = null;
       } else {
         _monitorPerDay = await adminUsecase.listMonitorsPerDay(dayOfWeek);
-        print(_monitorPerDay);
       }
     } catch (e) {
       errorMessage = e.toString().replaceAll('Exception: ', '');
@@ -47,7 +43,6 @@ class AdminBloc extends ChangeNotifier {
       errorMessage = e.toString().replaceAll('Exception: ', '');
       _clearMessageAfterDelay();
     } finally {
-      // Asegúrate de desactivar el indicador de carga
       _isLoadingProgressMonitor = false;
       Future.microtask(() => notifyListeners());
     }

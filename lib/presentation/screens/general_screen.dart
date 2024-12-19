@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import '../viewmodels/admin_bloc.dart';
 import '../widgets/alert_message.dart';
 import '../widgets/app_bar_content.dart';
-import '../widgets/data_container.dart';
-import '../widgets/control_de_horas.dart';
+import '../widgets/monitor_per_day.dart';
+import '../widgets/time_control.dart';
 
 class GeneralScreen extends StatefulWidget {
   const GeneralScreen({super.key});
@@ -20,7 +20,6 @@ class _GeneralScreenState extends State<GeneralScreen> {
     final adminBloc = Provider.of<AdminBloc>(context, listen: false);
     adminBloc.fetchMonitorPerDay();
     adminBloc.fetchProgressMonitor();
-    print(adminBloc.progressMonitors);
   }
 
   @override
@@ -41,18 +40,18 @@ class _GeneralScreenState extends State<GeneralScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  DataContainer(
+                  MonitorPerDay(
                     isLoading: adminBloc.isLoadingMonitorPerDay,
-                    dataIsNull: adminBloc.monitorPerDay == null,
+                    dataIsNull: adminBloc.monitorPerDay?.isEmpty ?? true,
                     mananaList:
                         (adminBloc.monitorPerDay?["Mañana"] ?? []) as List<dynamic>,
                     tardeList:
                         (adminBloc.monitorPerDay?["Tarde"] ?? []) as List<dynamic>,
                   ),
                   const SizedBox(height: 20),
-                  ControlDeHorasSection(
+                  TimeControl(
                     isLoading: adminBloc.isLoadingProgressMonitor,
-                    dataIsNull: adminBloc.progressMonitors == null,
+                    dataIsNull: adminBloc.progressMonitors?.isEmpty ?? true,
                     horasList: adminBloc.progressMonitors ?? [],
                   ),
                   if (adminBloc.errorMessage != null)

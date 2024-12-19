@@ -7,23 +7,19 @@ class StorageBloc with ChangeNotifier {
 
   Map<String, dynamic>? get user => _user;
 
-  /// Guardar datos del usuario en el almacenamiento local
   Future<void> saveUser(Map<String, dynamic> userData) async {
     final prefs = await SharedPreferences.getInstance();
     _user = userData;
 
-    // Guardar los datos como un JSON string
     await prefs.setString('user', userData.toString());
-    notifyListeners(); // Notifica a los widgets interesados
+    notifyListeners();
   }
 
-  /// Cargar datos del usuario desde el almacenamiento local
   Future<void> loadUser() async {
     final prefs = await SharedPreferences.getInstance();
     final userData = prefs.getString('user');
 
     if (userData != null) {
-      // Convierte el JSON string a un Map
       _user = _parseUserFromString(userData);
     } else {
       _user = null;
@@ -31,7 +27,6 @@ class StorageBloc with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Limpiar datos del usuario
   Future<void> clearUser() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('user');
@@ -39,10 +34,7 @@ class StorageBloc with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Convierte el string almacenado en JSON a un Map
   Map<String, dynamic> _parseUserFromString(String userString) {
-    // Aquí puedes usar jsonDecode si guardas el JSON como un String válido
-    // (esto es más seguro que almacenar solo un string básico)
     final sanitizedString = userString.replaceAll(RegExp(r"[{}]"), "");
     final entries = sanitizedString.split(',').map((e) {
       final split = e.split(':');

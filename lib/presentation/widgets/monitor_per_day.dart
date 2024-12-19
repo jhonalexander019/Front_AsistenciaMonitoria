@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'column_info.dart';
 
-class DataContainer extends StatelessWidget {
+class MonitorPerDay extends StatelessWidget {
   final bool isLoading;
   final bool dataIsNull;
   final List<dynamic> mananaList;
   final List<dynamic> tardeList;
 
-  const DataContainer({
+  const MonitorPerDay({
     super.key,
     required this.isLoading,
     required this.dataIsNull,
@@ -39,7 +39,6 @@ class DataContainer extends StatelessWidget {
               : Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Columna para Mañana
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -69,7 +68,6 @@ class DataContainer extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 16),
-                    // Columna para Tarde
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,

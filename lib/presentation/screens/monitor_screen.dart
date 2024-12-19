@@ -35,7 +35,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
               TextSpan(
                 text: 'Inicia sesión',
                 style: TextStyle(
-                  color: Colors.green, // Color solo para "Inicia sesión"
+                  color: Colors.green,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Wondercity',
                 ),

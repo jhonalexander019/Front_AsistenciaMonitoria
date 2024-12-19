@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ControlDeHorasSection extends StatelessWidget {
+class TimeControl extends StatelessWidget {
   final List<dynamic> horasList;
   final bool isLoading;
   final bool dataIsNull;
 
-  const ControlDeHorasSection(
+  const TimeControl(
       {super.key,
       required this.horasList,
       required this.isLoading,

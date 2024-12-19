@@ -13,7 +13,6 @@ class User {
     required this.rol,
   });
 
-  // Método para convertir un JSON a un objeto User
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       codigo: json['codigo'],
@@ -24,7 +23,6 @@ class User {
     );
   }
 
-  // Método para convertir un objeto User a JSON
   Map<String, dynamic> toJson() {
     return {
       'codigo': codigo,

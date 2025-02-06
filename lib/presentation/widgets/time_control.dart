@@ -47,7 +47,7 @@ class TimeControl extends StatelessWidget {
                   )
                 : Column(
                     children: horasList.map((monitor) {
-                      final horasTrabajadas = monitor['horasCubiertas'] as int;
+                      final horasTrabajadas = monitor['horasCubiertas'];
                       final totalHoras = monitor['totalHoras'] as int;
                       final progreso = horasTrabajadas / totalHoras;
                       final genero = monitor['genero'];
@@ -87,7 +87,7 @@ class TimeControl extends StatelessWidget {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       Text(
-                                        '${horasTrabajadas.toString()}/$totalHoras',
+                                        '${double.tryParse(horasTrabajadas.toString())?.toStringAsFixed(1) ?? "0.00"}/$totalHoras',
                                         style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold),

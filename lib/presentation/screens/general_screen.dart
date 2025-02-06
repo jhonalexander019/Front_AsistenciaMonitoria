@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:front_asistencia_monitoria/presentation/viewmodels/storage_bloc.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/admin_bloc.dart';
-import '../widgets/alert_message.dart';
 import '../widgets/app_bar_content.dart';
+import '../widgets/build_error_message_listener.dart';
 import '../widgets/monitor_per_day.dart';
 import '../widgets/time_control.dart';
+import 'login_screen.dart';
 
 class GeneralScreen extends StatefulWidget {
   const GeneralScreen({super.key});
@@ -14,12 +16,15 @@ class GeneralScreen extends StatefulWidget {
 }
 
 class _GeneralScreenState extends State<GeneralScreen> {
+  late AdminBloc _adminBloc;
+
   @override
   void initState() {
     super.initState();
-    final adminBloc = Provider.of<AdminBloc>(context, listen: false);
-    adminBloc.fetchMonitorPerDay();
-    adminBloc.fetchProgressMonitor();
+    _adminBloc = Provider.of<AdminBloc>(context, listen: false);
+
+    _adminBloc.fetchProgressMonitor();
+    _adminBloc.fetchMonitorPerDay();
   }
 
   @override
@@ -40,13 +45,31 @@ class _GeneralScreenState extends State<GeneralScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  GestureDetector(
+                    onTap: () {
+                      final adminBloc =
+                          Provider.of<StorageBloc>(context, listen: false);
+                      adminBloc.clearUser();
+
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginScreen()),
+                        (Route<dynamic> route) => false,
+                      );
+                    },
+                    child: const Icon(
+                      Icons.refresh,
+                      color: Colors.grey,
+                    ),
+                  ),
                   MonitorPerDay(
                     isLoading: adminBloc.isLoadingMonitorPerDay,
                     dataIsNull: adminBloc.monitorPerDay?.isEmpty ?? true,
-                    mananaList:
-                        (adminBloc.monitorPerDay?["Mañana"] ?? []) as List<dynamic>,
-                    tardeList:
-                        (adminBloc.monitorPerDay?["Tarde"] ?? []) as List<dynamic>,
+                    mananaList: (adminBloc.monitorPerDay?["Mañana"] ?? [])
+                        as List<dynamic>,
+                    tardeList: (adminBloc.monitorPerDay?["Tarde"] ?? [])
+                        as List<dynamic>,
                   ),
                   const SizedBox(height: 20),
                   TimeControl(
@@ -54,8 +77,10 @@ class _GeneralScreenState extends State<GeneralScreen> {
                     dataIsNull: adminBloc.progressMonitors?.isEmpty ?? true,
                     horasList: adminBloc.progressMonitors ?? [],
                   ),
-                  if (adminBloc.errorMessage != null)
-                AlertMessage(message: adminBloc.errorMessage!, isSuccess: false), 
+                  BuildErrorMessageListener<AdminBloc>(
+                    bloc: adminBloc,
+                    success: adminBloc.successMessage ?? false,
+                  ),
                 ],
               ),
             );

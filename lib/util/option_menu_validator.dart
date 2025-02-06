@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../presentation/screens/asistencia_screen.dart';
 import '../presentation/screens/general_screen.dart';
 import '../presentation/screens/monitors_screen.dart';
 import '../presentation/screens/semester_screen.dart';
@@ -11,6 +12,7 @@ class OptionMenuValidator {
         0: const GeneralScreen(),
         1: const MonitorsScreen(),
         2: const SemesterScreen(),
+        3: const AsistenciaScreen(),
     };
 
     return indexRoutes[index] ?? const SizedBox.shrink();

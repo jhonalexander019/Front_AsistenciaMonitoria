@@ -29,6 +29,8 @@ class _NavigatorBarState extends State<NavigatorBar> {
       child: BottomNavigationBar(
         currentIndex: _currentIndex,
         backgroundColor: const Color.fromRGBO(84, 22, 43, 1.0),
+          type: BottomNavigationBarType.fixed,
+
         items: _buildNavigationItems(),
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.white,
@@ -50,6 +52,10 @@ class _NavigatorBarState extends State<NavigatorBar> {
       BottomNavigationBarItem(
         icon: Icon(Icons.calendar_month),
         label: 'Semestre',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.view_list_rounded),
+        label: 'Asistencias',
       ),
     ];
   }

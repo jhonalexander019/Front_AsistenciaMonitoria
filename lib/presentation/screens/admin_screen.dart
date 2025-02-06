@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:provider/provider.dart';
 
 import '../../util/option_menu_validator.dart';
-import '../viewmodels/admin_bloc.dart';
 import '../widgets/navigator_bar.dart';
 
 class AdminScreen extends StatefulWidget {
@@ -20,10 +18,6 @@ class _AdminScreenState extends State<AdminScreen> {
   void initState() {
     super.initState();
     initializeDateFormatting('es_CO', null);
-    Future.microtask(() {
-      Provider.of<AdminBloc>(context, listen: false).fetchMonitorPerDay();
-      Provider.of<AdminBloc>(context, listen: false).fetchProgressMonitor();
-    });
   }
 
   void _onItemTapped(int index) {

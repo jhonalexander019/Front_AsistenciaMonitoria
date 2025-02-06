@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageBloc with ChangeNotifier {
-
   Map<String, dynamic>? _user;
+  bool _isLoading = true;
 
   Map<String, dynamic>? get user => _user;
+  bool get isLoading => _isLoading;
 
   Future<void> saveUser(Map<String, dynamic> userData) async {
     final prefs = await SharedPreferences.getInstance();
@@ -16,11 +17,14 @@ class StorageBloc with ChangeNotifier {
   }
 
   Future<void> loadUser() async {
+    _isLoading = true;
+
     final prefs = await SharedPreferences.getInstance();
     final userData = prefs.getString('user');
 
     if (userData != null) {
       _user = _parseUserFromString(userData);
+      _isLoading = false;
     } else {
       _user = null;
     }
@@ -38,9 +42,11 @@ class StorageBloc with ChangeNotifier {
     final sanitizedString = userString.replaceAll(RegExp(r"[{}]"), "");
     final entries = sanitizedString.split(',').map((e) {
       final split = e.split(':');
-      return MapEntry(split[0].trim(), split[1].trim());
+      final key = split[0].trim();
+      final value = split.sublist(1).join(':').trim();
+      return MapEntry(key, value);
     });
+
     return Map<String, dynamic>.fromEntries(entries);
   }
-
 }

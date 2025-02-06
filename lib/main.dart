@@ -6,18 +6,22 @@ import 'util/session_validator.dart';
 import 'data/datasources/auth_remote_data_source.dart';
 import 'data/datasources/admin_remote_data_source.dart';
 import 'data/datasources/semester_remote_data_source.dart';
+import 'data/datasources/monitor_remote_data_source.dart';
 
 import 'data/repositories/auth_repository_impl.dart';
 import 'data/repositories/admin_repository_impl.dart';
 import 'data/repositories/semester_repository_impl.dart';
+import 'data/repositories/monitor_repository_impl.dart';
 
 import 'domain/usecases/login_usecase.dart';
 import 'domain/usecases/admin_usecase.dart';
 import 'domain/usecases/semester_usecase.dart';
+import 'domain/usecases/monitor_usecase.dart';
 
 import 'presentation/viewmodels/login_bloc.dart';
 import 'presentation/viewmodels/admin_bloc.dart';
 import 'presentation/viewmodels/semester_bloc.dart';
+import 'presentation/viewmodels/monitor_bloc.dart';
 import 'presentation/viewmodels/storage_bloc.dart';
 
 void main() {
@@ -29,18 +33,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final authRemoteDataSource = AuthRemoteDataSource();
     final adminRemoteDataSource = AdminRemoteDataSource();
     final semesterRemoteDataSource = SemesterRemoteDataSource();
+    final monitorRemoteDataSource = MonitorRemoteDataSource();
 
     final authRepository = AuthRepositoryImpl(authRemoteDataSource);
     final adminRepository = AdminRepositoryImpl(adminRemoteDataSource);
     final semesterRepository = SemesterRepositoryImpl(semesterRemoteDataSource);
+    final monitorRepository = MonitorRepositoryImpl(monitorRemoteDataSource);
 
     final loginUserUseCase = LoginUseCase(authRepository);
     final adminUserUseCase = AdminUseCase(adminRepository);
     final semesterUserUseCase = SemesterUsecase(semesterRepository);
+    final monitorUserUseCase = MonitorUsecase(monitorRepository);
 
     return MultiProvider(
       providers: [
@@ -52,6 +58,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => SemesterBloc(semesterUserUseCase),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => MonitorBloc(monitorUserUseCase),
         ),
         ChangeNotifierProvider(
           create: (_) => StorageBloc(),
@@ -68,7 +77,8 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
         themeMode: ThemeMode.system,
-        home:  const SessionValidator(),
+
+        home: const SessionValidator(),
       ),
     );
   }

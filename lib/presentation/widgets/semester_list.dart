@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../data/models/semester_model.dart';
+import '../screens/profile_semester_screen.dart';
 
 class SemesterList extends StatelessWidget {
-  final List<dynamic> semesterList;
+  final List<Semester> semesterList;
   final bool isLoading;
   final bool dataIsNull;
 
@@ -39,70 +41,82 @@ class SemesterList extends StatelessWidget {
                   )
                 : Column(
                     children: semesterList.map((semester) {
-                      return Container(
-                        padding: const EdgeInsets.all(12),
-                        margin: const EdgeInsets.only(bottom: 12.0),
-                        decoration: BoxDecoration(
-                          color: const Color.fromRGBO(29, 43, 73, 0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.calendar_today,
-                                              size: 42),
-                                          const SizedBox(width: 8),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                semester.nombre,
-                                                style: const TextStyle(
-                                                  fontSize: 28,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    semester.fechaInicio,
-                                                    style: const TextStyle(
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 8),
-                                                  const Text("hasta"),
-                                                  const SizedBox(width: 8),
-                                                  Text(
-                                                    semester.fechaFin,
-                                                    style: const TextStyle(
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ProfileSemesterScreen(semester: semester),
                             ),
-                          ],
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          margin: const EdgeInsets.only(bottom: 12.0),
+                          decoration: BoxDecoration(
+                            color: const Color.fromRGBO(29, 43, 73, 0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.calendar_today,
+                                                size: 42),
+                                            const SizedBox(width: 8),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  semester.nombre,
+                                                  style: const TextStyle(
+                                                    fontSize: 28,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      semester.fechaInicio,
+                                                      style: const TextStyle(
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 8),
+                                                    const Text("hasta"),
+                                                    const SizedBox(width: 8),
+                                                    Text(
+                                                      semester.fechaFin,
+                                                      style: const TextStyle(
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     }).toList(),

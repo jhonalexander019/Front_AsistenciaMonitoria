@@ -23,8 +23,8 @@ class Semester {
   Map<String, dynamic> toJson() {
     return {
       'nombre': nombre,
-      'fecha_inicio_semestre': fechaInicio,
-      'fecha_fin_semestre': fechaFin,
+      'fechaInicio': fechaInicio,
+      'fechaFin': fechaFin,
     };
   }
 }

@@ -9,7 +9,8 @@ class AdminBloc extends ChangeNotifier {
   bool _isLoadingProgressMonitor = true;
   Map<String, dynamic>? _monitorPerDay;
   List<dynamic>? _progressMonitors;
-  String? errorMessage;
+  String? message;
+  bool? successMessage;
 
   bool get isLoadingMonitorPerDay => _isLoadingMonitorPerDay;
   bool get isLoadingProgressMonitor => _isLoadingProgressMonitor;
@@ -19,17 +20,19 @@ class AdminBloc extends ChangeNotifier {
   AdminBloc(this.adminUsecase);
 
   Future<void> fetchMonitorPerDay() async {
+    _monitorPerDay = null;
     final dayOfWeek = _getDayOfWeek();
-
     try {
-      if ( dayOfWeek == 'Sábado' || dayOfWeek == 'Domingo') {
+      _isLoadingMonitorPerDay = true;
+
+      if (dayOfWeek == 'Sábado' || dayOfWeek == 'Domingo') {
         _monitorPerDay = null;
       } else {
         _monitorPerDay = await adminUsecase.listMonitorsPerDay(dayOfWeek);
       }
     } catch (e) {
-      errorMessage = e.toString().replaceAll('Exception: ', '');
-      _clearMessageAfterDelay();
+      message = e.toString().replaceAll('Exception: ', '');
+      successMessage = false;
     } finally {
       _isLoadingMonitorPerDay = false;
       Future.microtask(() => notifyListeners());
@@ -37,11 +40,13 @@ class AdminBloc extends ChangeNotifier {
   }
 
   Future<void> fetchProgressMonitor() async {
+    _progressMonitors = null;
     try {
+      _isLoadingProgressMonitor = true;
       _progressMonitors = await adminUsecase.listProgressMonitors();
     } catch (e) {
-      errorMessage = e.toString().replaceAll('Exception: ', '');
-      _clearMessageAfterDelay();
+      message = e.toString().replaceAll('Exception: ', '');
+      successMessage = false;
     } finally {
       _isLoadingProgressMonitor = false;
       Future.microtask(() => notifyListeners());
@@ -60,12 +65,5 @@ class AdminBloc extends ChangeNotifier {
       'Domingo',
     ];
     return days[now.weekday - 1];
-  }
-
-  void _clearMessageAfterDelay() {
-    Future.delayed(const Duration(seconds: 5), () {
-      errorMessage = null;
-      notifyListeners();
-    });
   }
 }

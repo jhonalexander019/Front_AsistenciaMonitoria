@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
-
-import 'admin_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import '../../data/models/user_model.dart';
+import '../viewmodels/monitor_bloc.dart';
+import '../viewmodels/storage_bloc.dart';
+import '../widgets/build_error_message_listener.dart';
+import 'login_screen.dart';
 
 class MonitorScreen extends StatefulWidget {
   const MonitorScreen({super.key});
@@ -10,41 +15,188 @@ class MonitorScreen extends StatefulWidget {
 }
 
 class _MonitorScreenState extends State<MonitorScreen> {
+  late StorageBloc _storageBloc;
+  late MonitorBloc _monitorBloc;
+  late User user;
+
+  @override
+  void initState() {
+    super.initState();
+    _storageBloc = Provider.of<StorageBloc>(context, listen: false);
+    _monitorBloc = Provider.of<MonitorBloc>(context, listen: false);
+
+    user = User.fromJson(_storageBloc.user ?? {});
+
+    _monitorBloc.absentHours(user.id);
+  }
+
+  bool _shouldShowAttendanceButton(String assignedDays, double absentHours) {
+    final todayShift = _getTodayShift();
+    final isDayAssigned = assignedDays.split(', ').contains(todayShift);
+    return isDayAssigned || absentHours > 0.0;
+  }
+
+  String _getTodayShift() {
+    final today = DateTime.now();
+    final currentDay = _getDayName(today.weekday);
+    final currentShift = today.hour < 12 ? "Mañana" : "Tarde";
+    return "$currentDay$currentShift";
+  }
+
+  String _getDayName(int weekday) {
+    const days = [
+      'Lunes',
+      'Martes',
+      'Miércoles',
+      'Jueves',
+      'Viernes',
+      'Sábado',
+      'Domingo'
+    ];
+    return days[weekday - 1];
+  }
+
+  String getAttendanceType(String assignedDays, double absentHours) {
+    final todayShift = _getTodayShift();
+    bool esDiaAsignado = assignedDays.split(', ').contains(todayShift);
+
+    return (!esDiaAsignado && absentHours > 0.0) ? "Recuperado" : "Presente";
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(42.0),
-        child: GestureDetector(
-        
-        onTap: () {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const AdminScreen()),
-            (Route<dynamic> route) => false,
-          );
-        },
-        child: RichText(
-          text: const TextSpan(
-            text: '¿Ya tienes una cuenta? ',
-            style: TextStyle(
-              color: Colors.black,
-              fontFamily: 'Wondercity',
-            ),
+  final svgImagePath = _getUserImagePath();
+
+  return Scaffold(
+    body: Padding(
+      padding: const EdgeInsets.all(32.0),
+      child: Consumer<MonitorBloc>(
+        builder: (context, monitorBloc, child) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextSpan(
-                text: 'Inicia sesión',
-                style: TextStyle(
-                  color: Colors.green,
+              SvgPicture.asset(
+                svgImagePath,
+                width: 150,
+                height: 150,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                '¡Hola ${user.nombre}!',
+                style: const TextStyle(
+                  fontSize: 32,
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'Wondercity',
                 ),
               ),
+              const SizedBox(height: 12),
+              (monitorBloc.logOut == true)
+                  ? _buildLogoutButton()
+                  : _buildAttendanceButton(),
+              BuildErrorMessageListener<MonitorBloc>(
+                bloc: monitorBloc,
+                success: monitorBloc.successMessage ?? false,
+              ),
             ],
-          ),
-        ),
-        ),
+          );
+        },
       ),
+    ),
+  );
+}
+
+  String _getUserImagePath() {
+    return user.genero == "Masculino"
+        ? 'assets/images/male.svg'
+        : 'assets/images/female.svg';
+  }
+
+  Widget _buildLogoutButton() {
+    return Column(
+      children: [
+        const Text('El semestre al que fuiste asignado ha finalizado.',
+            textAlign: TextAlign.center),
+        const SizedBox(height: 12),
+        ElevatedButton(
+          onPressed: _logout,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromRGBO(84, 22, 43, 1.0),
+            minimumSize: const Size(double.infinity, 40),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+          ),
+          child: const Text('Cerrar Sesión'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAttendanceButton() {
+    return Selector<MonitorBloc, double>(
+      selector: (_, bloc) => bloc.hours?.toDouble() ?? 0.0,
+      builder: (_, absentHours, __) {
+        if (_shouldShowAttendanceButton(
+            user.diasAsignados ?? '', absentHours)) {
+          return _buildAttendanceColumn(absentHours);
+        } else {
+          return const Text(
+              "Hoy no tienes monitoria asignada, ni horas pendientes por recuperar. ¡Disfruta tu día!");
+        }
+      },
+    );
+  }
+
+  Widget _buildAttendanceColumn(double absentHours) {
+    return Column(
+      children: [
+        const Text('Presiona el botón para marcar tu asistencia'),
+        const SizedBox(height: 12),
+
+        Consumer<MonitorBloc>(
+          builder: (context, monitorBloc, child) {
+            return ElevatedButton(
+              onPressed: monitorBloc.isLoadingRegisterAttendance
+                  ? null
+                  : () async {
+                String attendanceType =
+                getAttendanceType(user.diasAsignados ?? '', absentHours);
+                await monitorBloc.registerAttendance(user.id, attendanceType);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromRGBO(84, 22, 43, 1.0),
+                minimumSize: const Size(double.infinity, 40),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+              ),
+              child: monitorBloc.isLoadingRegisterAttendance
+                  ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2.0,
+                ),
+              )
+                  : const Text('Registrar Asistencia'),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+
+  void _logout() {
+    final adminBloc = Provider.of<StorageBloc>(context, listen: false);
+    adminBloc.clearUser();
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      (Route<dynamic> route) => false,
     );
   }
 }

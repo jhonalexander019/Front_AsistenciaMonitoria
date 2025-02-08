@@ -8,6 +8,7 @@ class AdminRepositoryImpl implements AdminRepository {
 
   @override
   Future<Map<String, dynamic>> listMonitorsPerDay(String day) async {
+    
     return await remoteDataSource.listMonitorsPerDay(day);
   }
 

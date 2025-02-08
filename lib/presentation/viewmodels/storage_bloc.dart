@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageBloc with ChangeNotifier {
@@ -12,7 +13,7 @@ class StorageBloc with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     _user = userData;
 
-    await prefs.setString('user', userData.toString());
+    await prefs.setString('user', json.encode(userData)); // Use json.encode
     notifyListeners();
   }
 
@@ -20,10 +21,10 @@ class StorageBloc with ChangeNotifier {
     _isLoading = true;
 
     final prefs = await SharedPreferences.getInstance();
-    final userData = prefs.getString('user');
+    final userDataString = prefs.getString('user');
 
-    if (userData != null) {
-      _user = _parseUserFromString(userData);
+    if (userDataString != null) {
+      _user = json.decode(userDataString); // Use json.decode
       _isLoading = false;
     } else {
       _user = null;
@@ -36,17 +37,5 @@ class StorageBloc with ChangeNotifier {
     await prefs.remove('user');
     _user = null;
     notifyListeners();
-  }
-
-  Map<String, dynamic> _parseUserFromString(String userString) {
-    final sanitizedString = userString.replaceAll(RegExp(r"[{}]"), "");
-    final entries = sanitizedString.split(',').map((e) {
-      final split = e.split(':');
-      final key = split[0].trim();
-      final value = split.sublist(1).join(':').trim();
-      return MapEntry(key, value);
-    });
-
-    return Map<String, dynamic>.fromEntries(entries);
   }
 }

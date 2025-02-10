@@ -3,31 +3,36 @@ import 'package:provider/provider.dart';
 
 import '../../data/models/user_model.dart';
 import '../../domain/usecases/login_usecase.dart';
-import '../../util/login_validator.dart';
 import '../screens/admin_screen.dart';
 import '../screens/monitor_screen.dart';
 import 'storage_bloc.dart';
 
 class LoginBloc with ChangeNotifier {
   final LoginUseCase loginUsecase;
-  String? errorMessage;
-  bool _isLoading = true;
+  String? message;
+  bool? successMessage;
+  bool _isLoading = false;
   bool get isLoading => _isLoading;
 
   LoginBloc(this.loginUsecase);
 
-  Future<void> login(BuildContext context, int accessCode) async {
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
 
-    final emailError = LoginValidator.validateAccessCode(accessCode);
-    if (emailError != null) {
-      errorMessage = emailError;
+  Future<void> login(BuildContext context, String accessCode) async {
+    if (accessCode.length != 4 || int.tryParse(accessCode) == null) {
+      message = "El código de acceso debe contener exactamente 4 números.";
+      successMessage = false;
       notifyListeners();
-      _clearMessageAfterDelay();
       return;
     }
 
     try {
-      User user = await loginUsecase(accessCode);
+      isLoading = true;
+
+      User user = await loginUsecase(int.parse(accessCode));
 
       Provider.of<StorageBloc>(context, listen: false).saveUser(user.toJson());
 
@@ -40,19 +45,11 @@ class LoginBloc with ChangeNotifier {
         (Route<dynamic> route) => false,
       );
     } catch (e) {
-      errorMessage = e.toString().replaceAll('Exception: ', '');
-      _clearMessageAfterDelay();
+      message = e.toString().replaceAll('Exception: ', '');
+      successMessage = false;
     } finally {
-      _isLoading = false;
+      isLoading = false;
       notifyListeners();
     }
-
-  }
-
-  void _clearMessageAfterDelay() {
-    Future.delayed(const Duration(seconds: 5), () {
-      errorMessage = null;
-      notifyListeners();
-    });
   }
 }

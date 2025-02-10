@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
-  final Function(int accessCode) onLogin;
+  final Function(String accessCode) onLogin;
+  final bool isLoading;
 
-  const LoginForm({super.key, required this.onLogin});
+  const LoginForm({super.key, required this.onLogin, required this.isLoading});
 
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -16,7 +17,7 @@ class _LoginFormState extends State<LoginForm> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      final accessCode = int.parse(_controllers.map((c) => c.text).join());
+      final accessCode = _controllers.map((c) => c.text).join();
       widget.onLogin(accessCode);
     }
   }
@@ -42,6 +43,7 @@ class _LoginFormState extends State<LoginForm> {
                     textAlign: TextAlign.center,
                     maxLength: 1,
                     style: const TextStyle(fontSize: 24),
+                    keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       counterText: "",
                       border: OutlineInputBorder(),
@@ -55,6 +57,8 @@ class _LoginFormState extends State<LoginForm> {
                     onChanged: (value) {
                       if (value.length == 1 && index < 3) {
                         FocusScope.of(context).nextFocus();
+                      } else if (value.isEmpty && index > 0) {
+                        FocusScope.of(context).previousFocus();
                       }
                     },
                   ),
@@ -64,7 +68,7 @@ class _LoginFormState extends State<LoginForm> {
           ),
           const SizedBox(height: 30),
           ElevatedButton(
-            onPressed: _submitForm,
+            onPressed: (widget.isLoading) ? null : _submitForm,
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromRGBO(84, 22, 43, 1.000),
               minimumSize: const Size(double.infinity, 40),
@@ -73,7 +77,16 @@ class _LoginFormState extends State<LoginForm> {
                 borderRadius: BorderRadius.circular(5.0),
               ),
             ),
-            child: const Text('Ingresar'),
+            child: (widget.isLoading)
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2.0,
+                    ),
+                  )
+                : const Text('Ingresar'),
           ),
         ],
       ),

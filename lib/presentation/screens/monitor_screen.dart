@@ -31,6 +31,11 @@ class _MonitorScreenState extends State<MonitorScreen> {
   }
 
   bool _shouldShowAttendanceButton(String assignedDays, double absentHours) {
+    final today = DateTime.now();
+    final isWeekend =
+        today.weekday == DateTime.saturday || today.weekday == DateTime.sunday;
+    if (isWeekend) return false;
+
     final todayShift = _getTodayShift();
     final isDayAssigned = assignedDays.split(', ').contains(todayShift);
     return isDayAssigned || absentHours > 0.0;
@@ -53,6 +58,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
       'Sábado',
       'Domingo'
     ];
+
     return days[weekday - 1];
   }
 
@@ -65,44 +71,44 @@ class _MonitorScreenState extends State<MonitorScreen> {
 
   @override
   Widget build(BuildContext context) {
-  final svgImagePath = _getUserImagePath();
+    final svgImagePath = _getUserImagePath();
 
-  return Scaffold(
-    body: Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: Consumer<MonitorBloc>(
-        builder: (context, monitorBloc, child) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                svgImagePath,
-                width: 150,
-                height: 150,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                '¡Hola ${user.nombre}!',
-                style: const TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Consumer<MonitorBloc>(
+          builder: (context, monitorBloc, child) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  svgImagePath,
+                  width: 150,
+                  height: 150,
                 ),
-              ),
-              const SizedBox(height: 12),
-              (monitorBloc.logOut == true)
-                  ? _buildLogoutButton()
-                  : _buildAttendanceButton(),
-              BuildErrorMessageListener<MonitorBloc>(
-                bloc: monitorBloc,
-                success: monitorBloc.successMessage ?? false,
-              ),
-            ],
-          );
-        },
+                const SizedBox(height: 24),
+                Text(
+                  '¡Hola ${user.nombre}!',
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                (monitorBloc.logOut == true)
+                    ? _buildLogoutButton()
+                    : _buildAttendanceButton(),
+                BuildErrorMessageListener<MonitorBloc>(
+                  bloc: monitorBloc,
+                  success: monitorBloc.successMessage ?? false,
+                ),
+              ],
+            );
+          },
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   String _getUserImagePath() {
     return user.genero == "Masculino"
@@ -136,12 +142,26 @@ class _MonitorScreenState extends State<MonitorScreen> {
     return Selector<MonitorBloc, double>(
       selector: (_, bloc) => bloc.hours?.toDouble() ?? 0.0,
       builder: (_, absentHours, __) {
+        final today = DateTime.now();
+        final isWeekend = today.weekday == DateTime.saturday ||
+            today.weekday == DateTime.sunday;
+
+        if (isWeekend) {
+          return const Text(
+            "Fin de semana, no puedes registrar asistencias.",
+            style: TextStyle(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          );
+        }
+
         if (_shouldShowAttendanceButton(
             user.diasAsignados ?? '', absentHours)) {
           return _buildAttendanceColumn(absentHours);
         } else {
           return const Text(
-              "Hoy no tienes monitoria asignada, ni horas pendientes por recuperar. ¡Disfruta tu día!");
+            "Hoy no tienes monitoria asignada, ni horas pendientes por recuperar. ¡Disfruta tu día!",
+            textAlign: TextAlign.center,
+          );
         }
       },
     );
@@ -150,19 +170,22 @@ class _MonitorScreenState extends State<MonitorScreen> {
   Widget _buildAttendanceColumn(double absentHours) {
     return Column(
       children: [
-        const Text('Presiona el botón para marcar tu asistencia'),
+        const Text(
+          'Presiona el botón para marcar tu asistencia',
+          textAlign: TextAlign.center,
+        ),
         const SizedBox(height: 12),
-
         Consumer<MonitorBloc>(
           builder: (context, monitorBloc, child) {
             return ElevatedButton(
               onPressed: monitorBloc.isLoadingRegisterAttendance
                   ? null
                   : () async {
-                String attendanceType =
-                getAttendanceType(user.diasAsignados ?? '', absentHours);
-                await monitorBloc.registerAttendance(user.id, attendanceType);
-              },
+                      String attendanceType = getAttendanceType(
+                          user.diasAsignados ?? '', absentHours);
+                      await monitorBloc.registerAttendance(
+                          user.id, attendanceType);
+                    },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromRGBO(84, 22, 43, 1.0),
                 minimumSize: const Size(double.infinity, 40),
@@ -173,13 +196,13 @@ class _MonitorScreenState extends State<MonitorScreen> {
               ),
               child: monitorBloc.isLoadingRegisterAttendance
                   ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2.0,
-                ),
-              )
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2.0,
+                      ),
+                    )
                   : const Text('Registrar Asistencia'),
             );
           },
@@ -187,7 +210,6 @@ class _MonitorScreenState extends State<MonitorScreen> {
       ],
     );
   }
-
 
   void _logout() {
     final adminBloc = Provider.of<StorageBloc>(context, listen: false);

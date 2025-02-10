@@ -95,12 +95,12 @@ class SemesterBloc with ChangeNotifier {
       await semesterUsecase.deleteSemester(id);
       message = 'Semestre eliminado exitosamente';
       successMessage = true;
+
       _semesters.removeWhere((element) => element.id == id);
     } catch (e) {
       message = e.toString().replaceAll('Exception: ', '');
       successMessage = false;
     } finally {
-      _isLoadingProgressMonitor = false;
       Future.microtask(() => notifyListeners());
     }
   }

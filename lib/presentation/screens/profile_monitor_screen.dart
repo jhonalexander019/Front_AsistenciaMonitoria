@@ -53,113 +53,114 @@ class _ProfileMonitorScreenState extends State<ProfileMonitorScreen> {
         : 'assets/images/female.svg';
 
     return Scaffold(
-      key: _key,
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'Perfil',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+        key: _key,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text(
+                'Perfil',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const Spacer(),
-            Row(
+              const Spacer(),
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isEditing = !_isEditing;
+                      });
+                    },
+                    child: const Icon(Icons.edit),
+                  ),
+                  const SizedBox(width: 20),
+                  GestureDetector(
+                    onTap: () {
+                      _monitorBloc.deleteMonitor(widget.monitor.id!);
+                      Future.delayed(const Duration(milliseconds: 500), () {
+                        if (mounted) {
+                          Navigator.pop(context);
+                        }
+                      });
+                    },
+                    child: const Icon(Icons.delete),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: () {
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SvgPicture.asset(
+                      svgImagePath,
+                      height: 100,
+                      width: 100,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        CustomBottomSheet.show(
+                          context: context,
+                          title: 'Horario',
+                          child: MonitorScheduleForm(
+                            schedule: widget.monitor.diasAsignados ?? "",
+                            onUpdate: (schedule) {
+                              _updateSchedule(schedule);
+                            },
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 200,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(84, 22, 43, 1.000),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        alignment: Alignment.center,
+                        child: const Text(
+                          "Asignar Horario",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                MonitorForm(
+                  semesters: _semesterBloc.semesters ?? [],
+                  onCreate: (monitor) {
+                    _monitorBloc.updateMonitor(monitor, widget.monitor.id!);
                     setState(() {
                       _isEditing = !_isEditing;
                     });
                   },
-                  child: const Icon(Icons.edit),
-                ),
-                const SizedBox(width: 20),
-                GestureDetector(
-                  onTap: () {
-                    _monitorBloc.deleteMonitor(widget.monitor.id!);
-                    Future.delayed(const Duration(milliseconds: 500), () {
-                      if (mounted) {
-                        Navigator.pop(context);
-                      }
-                    });
-
-                  },
-                  child: const Icon(Icons.delete),
+                  showSubmitButton: _isEditing,
+                  monitor: widget.monitor,
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                SvgPicture.asset(
-                  svgImagePath,
-                  height: 100,
-                  width: 100,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    CustomBottomSheet.show(
-                      context: context,
-                      title: 'Horario',
-                      child: MonitorScheduleForm(
-                        schedule: widget.monitor.diasAsignados ?? "",
-                        onUpdate: (schedule) {
-                          _updateSchedule(schedule);
-                        },
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: 200,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(84, 22, 43, 1.000),
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    alignment: Alignment.center,
-                    child: const Text(
-                      "Asignar Horario",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            MonitorForm(
-              semesters: _semesterBloc.semesters ?? [],
-              onCreate: (monitor) {
-                _monitorBloc.updateMonitor(monitor, widget.monitor.id!);
-                setState(() {
-                  _isEditing = !_isEditing;
-                });
-              },
-              showSubmitButton: _isEditing,
-              monitor: widget.monitor,
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }

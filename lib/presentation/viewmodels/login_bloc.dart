@@ -45,7 +45,7 @@ class LoginBloc with ChangeNotifier {
         (Route<dynamic> route) => false,
       );
     } catch (e) {
-      message = e.toString().replaceAll('Exception: ', '');
+      message = e.toString().replaceAll("Exception:", "").replaceAll("Timeout", "");
       successMessage = false;
     } finally {
       isLoading = false;

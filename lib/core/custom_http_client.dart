@@ -19,7 +19,7 @@ class CustomHttpClient {
     await _checkConnectivity();
     return request().timeout(
       timeout,
-      onTimeout: () => throw TimeoutException('Tiempo de espera agotado'),
+      onTimeout: () => throw TimeoutException('Conectate a una red de la universidad'),
     );
   }
 

@@ -9,7 +9,7 @@ class AdminUseCase {
     return await repository.listMonitorsPerDay(day);
   }
 
-  Future<List<dynamic>> listProgressMonitors() async {
-    return await repository.listProgressMonitors();
+  Future<List<dynamic>> listProgressMonitors({int? semestreId}) async {
+    return await repository.listProgressMonitors(semestreId: semestreId);
   }
 }

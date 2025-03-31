@@ -8,10 +8,15 @@ class AdminRemoteDataSource extends BaseRemoteDataSource {
     );
   }
 
-  Future<List<dynamic>> listProgressMonitors() async {
+  Future<List<dynamic>> listProgressMonitors({int? semestreId}) async {
+    final String url = semestreId != null
+        ? '/monitores/horasCubiertas?semestreId=$semestreId'
+        : '/monitores/horasCubiertas';
+
     return getRequest<List<dynamic>>(
-      '/monitores/horasCubiertas',
+      url,
           (data) => data as List<dynamic>,
     );
   }
+
 }

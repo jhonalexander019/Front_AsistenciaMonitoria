@@ -5,7 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 
 class CustomHttpClient {
   final client = http.Client();
-  final Duration timeout = Duration(seconds: 5);
+  static const Duration timeout = Duration(seconds: 5);
 
   Future<bool> _checkConnectivity() async {
     var connectivityResult = await Connectivity().checkConnectivity();

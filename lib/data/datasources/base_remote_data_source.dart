@@ -20,7 +20,7 @@ abstract class BaseRemoteDataSource {
       }
       throw Exception(response.body);
     } on SocketException catch (e) {
-      throw Exception("${e.message}");
+      throw Exception(e.message);
     } on http.ClientException catch (e) {
       throw Exception("Error en la solicitud HTTP: ${e.message}");
     } catch (e) {
@@ -45,7 +45,7 @@ abstract class BaseRemoteDataSource {
       }
       throw Exception(response.body);
     } on SocketException catch (e) {
-      throw Exception("${e.message}");
+      throw Exception(e.message);
     } on http.ClientException catch (e) {
       throw Exception("Error en la solicitud HTTP: ${e.message}");
     } catch (e) {
@@ -70,7 +70,7 @@ abstract class BaseRemoteDataSource {
       }
       throw Exception(response.body);
     } on SocketException catch (e) {
-      throw Exception("${e.message}");
+      throw Exception(e.message);
     } on http.ClientException catch (e) {
       throw Exception("Error en la solicitud HTTP: ${e.message}");
     } catch (e) {
@@ -87,7 +87,7 @@ abstract class BaseRemoteDataSource {
         throw Exception(response.body);
       }
     } on SocketException catch (e) {
-      throw Exception("${e.message}");
+      throw Exception(e.message);
     } on http.ClientException catch (e) {
       throw Exception("Error en la solicitud HTTP: ${e.message}");
     } catch (e) {

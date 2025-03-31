@@ -39,11 +39,11 @@ class AdminBloc extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchProgressMonitor() async {
+  Future<void> fetchProgressMonitor({int? semestreId}) async {
     _progressMonitors = null;
     try {
       _isLoadingProgressMonitor = true;
-      _progressMonitors = await adminUsecase.listProgressMonitors();
+      _progressMonitors = await adminUsecase.listProgressMonitors(semestreId: semestreId);
     } catch (e) {
       message = e.toString().replaceAll('Exception: ', '');
       successMessage = false;

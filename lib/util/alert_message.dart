@@ -19,11 +19,11 @@ class AlertMessage {
         child: Material(
           color: Colors.transparent,
           child: Container(
-            padding: EdgeInsets.all(12),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: isSuccess ? Colors.green : Colors.red,
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black26,
                   blurRadius: 8,
@@ -56,7 +56,7 @@ class AlertMessage {
 
     overlay.insert(overlayEntry);
 
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       overlayEntry.remove();
     });
   }

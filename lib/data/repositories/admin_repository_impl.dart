@@ -13,7 +13,7 @@ class AdminRepositoryImpl implements AdminRepository {
   }
 
   @override
-  Future<List<dynamic>> listProgressMonitors() async {
-    return await remoteDataSource.listProgressMonitors();
+  Future<List<dynamic>> listProgressMonitors({int? semestreId}) async {
+    return await remoteDataSource.listProgressMonitors(semestreId: semestreId);
   }
 }

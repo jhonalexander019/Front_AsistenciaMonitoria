@@ -14,11 +14,11 @@ class BuildErrorMessageListener<T> extends StatefulWidget {
   });
 
   @override
-  _BuildErrorMessageListenerState<T> createState() =>
-      _BuildErrorMessageListenerState<T>();
+  BuildErrorMessageListenerState<T> createState() =>
+      BuildErrorMessageListenerState<T>();
 }
 
-class _BuildErrorMessageListenerState<T> extends State<BuildErrorMessageListener<T>> {
+class BuildErrorMessageListenerState<T> extends State<BuildErrorMessageListener<T>> {
   String? previousErrorMessage;
 
    @override

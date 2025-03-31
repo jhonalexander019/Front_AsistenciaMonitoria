@@ -1,6 +1,5 @@
 import '../../domain/repositories/monitor_repository.dart';
 import '../datasources/monitor_remote_data_source.dart';
-import '../models/attendance_model.dart';
 import '../models/monitor_model.dart';
 
 class MonitorRepositoryImpl implements MonitorRepository {
@@ -28,18 +27,5 @@ class MonitorRepositoryImpl implements MonitorRepository {
     return await remoteDataSource.deleteMonitor(id);
   }
 
-  @override
-  Future<bool> registerAttendance(int id, String attendanceType) async {
-    return await remoteDataSource.registerAttendance(id, attendanceType);
-  }
 
-  @override
-  Future<double> absentHours(int id) async {
-    return await remoteDataSource.absentHours(id);
-  }
-
-  @override
-  Future<List<Attendance>> listAttendances() async {
-    return await remoteDataSource.listAttendances();
-  }
 }

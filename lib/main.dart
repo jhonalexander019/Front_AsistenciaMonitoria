@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'data/datasources/assistance_remote_data_source.dart';
+import 'data/repositories/assistance_repository_impl.dart';
+import 'domain/usecases/assistance_usecase.dart';
+import 'presentation/viewmodels/assistance_bloc.dart';
 import 'util/session_validator.dart';
 
 import 'data/datasources/auth_remote_data_source.dart';
@@ -37,16 +41,20 @@ class MyApp extends StatelessWidget {
     final adminRemoteDataSource = AdminRemoteDataSource();
     final semesterRemoteDataSource = SemesterRemoteDataSource();
     final monitorRemoteDataSource = MonitorRemoteDataSource();
+    final assistanceRemoteDataSource = AssistanceRemoteDataSource();
 
     final authRepository = AuthRepositoryImpl(authRemoteDataSource);
     final adminRepository = AdminRepositoryImpl(adminRemoteDataSource);
     final semesterRepository = SemesterRepositoryImpl(semesterRemoteDataSource);
     final monitorRepository = MonitorRepositoryImpl(monitorRemoteDataSource);
+    final assistanceRepository =
+        AssistanceRepositoryImpl(assistanceRemoteDataSource);
 
     final loginUserUseCase = LoginUseCase(authRepository);
     final adminUserUseCase = AdminUseCase(adminRepository);
     final semesterUserUseCase = SemesterUsecase(semesterRepository);
     final monitorUserUseCase = MonitorUsecase(monitorRepository);
+    final assistanceUserUseCase = AssistanceUsecase(assistanceRepository);
 
     return MultiProvider(
       providers: [
@@ -63,6 +71,9 @@ class MyApp extends StatelessWidget {
           create: (_) => MonitorBloc(monitorUserUseCase),
         ),
         ChangeNotifierProvider(
+          create: (_) => AssistanceBloc(assistanceUserUseCase),
+        ),
+        ChangeNotifierProvider(
           create: (_) => StorageBloc(),
         ),
       ],
@@ -77,7 +88,6 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
         themeMode: ThemeMode.system,
-
         home: const SessionValidator(),
       ),
     );

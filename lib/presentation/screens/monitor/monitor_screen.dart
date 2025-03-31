@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import '../../data/models/user_model.dart';
-import '../viewmodels/monitor_bloc.dart';
-import '../viewmodels/storage_bloc.dart';
-import '../widgets/build_error_message_listener.dart';
-import 'login_screen.dart';
+import '../../../data/models/user_model.dart';
+import '../../viewmodels/assistance_bloc.dart';
+import '../../viewmodels/storage_bloc.dart';
+import '../../widgets/build_error_message_listener.dart';
+import '../login/login_screen.dart';
 
 class MonitorScreen extends StatefulWidget {
   const MonitorScreen({super.key});
 
   @override
-  _MonitorScreenState createState() => _MonitorScreenState();
+  MonitorScreenState createState() => MonitorScreenState();
 }
 
-class _MonitorScreenState extends State<MonitorScreen> {
+class MonitorScreenState extends State<MonitorScreen> {
   late StorageBloc _storageBloc;
-  late MonitorBloc _monitorBloc;
+  late AssistanceBloc _assistanceBloc;
   late User user;
 
   @override
   void initState() {
     super.initState();
     _storageBloc = Provider.of<StorageBloc>(context, listen: false);
-    _monitorBloc = Provider.of<MonitorBloc>(context, listen: false);
+    _assistanceBloc = Provider.of<AssistanceBloc>(context, listen: false);
 
     user = User.fromJson(_storageBloc.user ?? {});
 
-    _monitorBloc.absentHours(user.id);
+    _assistanceBloc.absentHours(user.id);
   }
 
   bool _shouldShowAttendanceButton(String assignedDays, double absentHours) {
@@ -76,8 +76,8 @@ class _MonitorScreenState extends State<MonitorScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(32.0),
-        child: Consumer<MonitorBloc>(
-          builder: (context, monitorBloc, child) {
+        child: Consumer<AssistanceBloc>(
+          builder: (context, assistanceBloc, child) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -95,12 +95,12 @@ class _MonitorScreenState extends State<MonitorScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                (monitorBloc.logOut == true)
+                (assistanceBloc.logOut == true)
                     ? _buildLogoutButton()
                     : _buildAttendanceButton(),
-                BuildErrorMessageListener<MonitorBloc>(
-                  bloc: monitorBloc,
-                  success: monitorBloc.successMessage ?? false,
+                BuildErrorMessageListener<AssistanceBloc>(
+                  bloc: assistanceBloc,
+                  success: assistanceBloc.successMessage ?? false,
                 ),
               ],
             );
@@ -139,7 +139,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
   }
 
   Widget _buildAttendanceButton() {
-    return Selector<MonitorBloc, double>(
+    return Selector<AssistanceBloc, double>(
       selector: (_, bloc) => bloc.hours?.toDouble() ?? 0.0,
       builder: (_, absentHours, __) {
         final today = DateTime.now();
@@ -175,15 +175,15 @@ class _MonitorScreenState extends State<MonitorScreen> {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 12),
-        Consumer<MonitorBloc>(
-          builder: (context, monitorBloc, child) {
+        Consumer<AssistanceBloc>(
+          builder: (context, assistanceBloc, child) {
             return ElevatedButton(
-              onPressed: monitorBloc.isLoadingRegisterAttendance
+              onPressed: assistanceBloc.isLoadingRegisterAttendance
                   ? null
                   : () async {
                       String attendanceType = getAttendanceType(
                           user.diasAsignados ?? '', absentHours);
-                      await monitorBloc.registerAttendance(
+                      await assistanceBloc.registerAttendance(
                           user.id, attendanceType);
                     },
               style: ElevatedButton.styleFrom(
@@ -194,7 +194,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
                   borderRadius: BorderRadius.circular(5.0),
                 ),
               ),
-              child: monitorBloc.isLoadingRegisterAttendance
+              child: assistanceBloc.isLoadingRegisterAttendance
                   ? const SizedBox(
                       width: 20,
                       height: 20,

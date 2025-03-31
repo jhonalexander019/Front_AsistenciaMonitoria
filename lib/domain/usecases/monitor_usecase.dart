@@ -1,5 +1,3 @@
-import 'package:front_asistencia_monitoria/data/models/attendance_model.dart';
-
 import '../../data/models/monitor_model.dart';
 import '../repositories/monitor_repository.dart';
 
@@ -23,16 +21,6 @@ class MonitorUsecase {
   Future deleteMonitor(int id) async {
     return await repository.deleteMonitor(id);
   }
-
-  Future<bool> registerAttendance(int id, String attendanceType) async {
-    return await repository.registerAttendance(id, attendanceType);
-  }
   
-  Future<double> absentHours(int id) async {
-    return await repository.absentHours(id);
-  }
 
-  Future<List<Attendance>> listAttendances() async {
-    return await repository.listAttendances();
-  }
 }

@@ -12,26 +12,13 @@ class MonitorBloc with ChangeNotifier {
   bool _isLoadingAttendances = false;
   bool _isLoadingRegisterAttendance = false;
   List<Monitor> _monitors = [];
-  List<Attendance> _attendances = [];
   String? message;
   bool? successMessage;
-  double? _absentHours;
-  bool? _logOut = false;
 
-  bool get isLoadingSemesters => _isLoadingSemesters;
-  bool get isLoadingAttendances => _isLoadingAttendances;
-  bool get isLoadingRegisterAttendance => _isLoadingRegisterAttendance;
-  List<Monitor>? get monitors => _monitors;
-  List<Attendance>? get attendances => _attendances;
-  double? get hours => _absentHours;
-  bool? get logOut => _logOut;
+  bool get isLoadingMonitors => _isLoadingMonitors;
+  List<Monitor> get monitors => _monitors;
 
-  set isLoadingRegisterAttendance(bool value) {
-    _isLoadingRegisterAttendance = value;
-    notifyListeners();
-  }
-
-  MonitorBloc(this.monitorUsecase);
+  MonitorBloc(this._monitorUsecase);
 
   Future<void> fetchMonitors() async {
     _monitors = [];
@@ -86,53 +73,6 @@ class MonitorBloc with ChangeNotifier {
       message = e.toString().replaceAll('Exception: ', '');
       successMessage = false;
     } finally {
-      Future.microtask(() => notifyListeners());
-    }
-  }
-
-  registerAttendance(int id, String attendanceType) async {
-    try {
-      isLoadingRegisterAttendance = true;
-      bool registerSuccess =
-      await monitorUsecase.registerAttendance(id, attendanceType);
-      if (registerSuccess) {
-        message = 'Asistencia registrada exitosamente';
-        successMessage = true;
-      }
-    } catch (e) {
-      message = e.toString().replaceAll('Exception: ', '');
-      successMessage = false;
-    } finally {
-      isLoadingRegisterAttendance = false;
-      Future.microtask(() => notifyListeners());
-    }
-  }
-
-  Future<void> absentHours(int id) async {
-    try {
-      _absentHours = await monitorUsecase.absentHours(id);
-    } catch (e) {
-      message = e.toString().replaceAll('Exception: ', '');
-      print('message: $message');
-      if (message == 'Te encuentras fuera del semestre vigente') {
-        _logOut = true;
-      }
-      successMessage = false;
-    } finally {
-      Future.microtask(() => notifyListeners());
-    }
-  }
-
-  Future<void> attendanceHistory() async {
-    _isLoadingAttendances = true;
-    _attendances = [];
-    try {
-      _attendances = await monitorUsecase.listAttendances();
-    } catch (e) {
-      message = e.toString().replaceAll('Exception: ', '');
-      successMessage = false;
-    } finally {
-      _isLoadingAttendances = false;
       Future.microtask(() => notifyListeners());
     }
   }

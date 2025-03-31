@@ -6,10 +6,10 @@ class NavigatorBar extends StatefulWidget {
   const NavigatorBar({super.key, required this.onItemTapped});
 
   @override
-  _NavigatorBarState createState() => _NavigatorBarState();
+  NavigatorBarState createState() => NavigatorBarState();
 }
 
-class _NavigatorBarState extends State<NavigatorBar> {
+class NavigatorBarState extends State<NavigatorBar> {
   int _currentIndex = 0;
 
   void _onItemTapped(int index) {

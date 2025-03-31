@@ -7,10 +7,10 @@ class LoginForm extends StatefulWidget {
   const LoginForm({super.key, required this.onLogin, required this.isLoading});
 
   @override
-  _LoginFormState createState() => _LoginFormState();
+  LoginFormState createState() => LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final List<TextEditingController> _controllers =
       List.generate(4, (_) => TextEditingController());

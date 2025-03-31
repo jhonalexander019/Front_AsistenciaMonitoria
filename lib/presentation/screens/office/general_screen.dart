@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:front_asistencia_monitoria/presentation/viewmodels/storage_bloc.dart';
 import 'package:provider/provider.dart';
-import '../viewmodels/admin_bloc.dart';
-import '../widgets/app_bar_content.dart';
-import '../widgets/build_error_message_listener.dart';
-import '../widgets/monitor_per_day.dart';
-import '../widgets/time_control.dart';
-import 'login_screen.dart';
+
+import '../../viewmodels/admin_bloc.dart';
+import '../../viewmodels/storage_bloc.dart';
+import '../../widgets/app_bar_content.dart';
+import '../../widgets/build_error_message_listener.dart';
+import 'widget/time_control.dart';
+import '../login/login_screen.dart';
+import 'widget/monitor_per_day.dart';
 
 class GeneralScreen extends StatefulWidget {
   const GeneralScreen({super.key});
@@ -34,7 +35,7 @@ class _GeneralScreenState extends State<GeneralScreen> {
         preferredSize: const Size.fromHeight(120.0),
         child: AppBar(
           title: const SizedBox.shrink(),
-          flexibleSpace: AppBarContent(title: 'Horario'),
+          flexibleSpace: const AppBarContent(title: 'Horario'),
         ),
       ),
       body: Padding(

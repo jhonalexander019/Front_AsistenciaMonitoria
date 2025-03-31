@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../util/inputs_validator.dart';
-import '../../data/models/monitor_model.dart';
-import '../../data/models/semester_model.dart';
+
+import '../../../../data/models/monitor_model.dart';
+import '../../../../data/models/semester_model.dart';
+import '../../../../util/inputs_validator.dart';
+import '../../../widgets/custom_button.dart';
 
 class MonitorForm extends StatefulWidget {
   final Function(Monitor monitor) onCreate;
@@ -18,10 +20,10 @@ class MonitorForm extends StatefulWidget {
   });
 
   @override
-  _MonitorFormState createState() => _MonitorFormState();
+  MonitorFormState createState() => MonitorFormState();
 }
 
-class _MonitorFormState extends State<MonitorForm> {
+class MonitorFormState extends State<MonitorForm> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController nombreController;
   late TextEditingController apellidoController;
@@ -51,14 +53,15 @@ class _MonitorFormState extends State<MonitorForm> {
     diasAsignadosController = TextEditingController(
         text: widget.monitor != null ? widget.monitor!.diasAsignados : '');
 
-    generoSeleccionado = widget.monitor != null ? widget.monitor!.genero : null;
-    semestreSeleccionado =
-        widget.monitor != null ? widget.monitor!.semestre : null;
+    generoSeleccionado = widget.monitor?.genero;
+    semestreSeleccionado = widget.monitor?.semestre;
 
     // Verifica si semestreSeleccionado existe en la lista de semesters
-    final isValidSemester = widget.semesters.any((s) => s.id == semestreSeleccionado);
+    final isValidSemester =
+        widget.semesters.any((s) => s.id == semestreSeleccionado);
     if (!isValidSemester) {
-      semestreSeleccionado = null; // Si no existe en la lista, establece null para evitar errores
+      semestreSeleccionado =
+          null;
     }
   }
 
@@ -105,7 +108,7 @@ class _MonitorFormState extends State<MonitorForm> {
                         ),
                         enabled: inputsEnabled,
                         validator: (value) {
-                          return InputsValdiator.validateName(value!);
+                          return InputsValidator.validateName(value!);
                         },
                       ),
                     ],
@@ -127,7 +130,7 @@ class _MonitorFormState extends State<MonitorForm> {
                         ),
                         enabled: inputsEnabled,
                         validator: (value) {
-                          return InputsValdiator.validateLastName(value!);
+                          return InputsValidator.validateLastName(value!);
                         },
                       ),
                     ],
@@ -147,7 +150,7 @@ class _MonitorFormState extends State<MonitorForm> {
               keyboardType: TextInputType.emailAddress,
               enabled: inputsEnabled,
               validator: (value) {
-                return InputsValdiator.validateEmail(value!);
+                return InputsValidator.validateEmail(value!);
               },
             ),
             const SizedBox(height: 16),
@@ -157,39 +160,31 @@ class _MonitorFormState extends State<MonitorForm> {
               value: generoSeleccionado,
               items: generos
                   .map((genero) => DropdownMenuItem(
-                        value: genero,
-                        child: Text(genero),
-                      ))
+                value: genero,
+                child: Text(genero),
+              ))
                   .toList(),
               onChanged: inputsEnabled
                   ? (value) {
-                      setState(() {
-                        generoSeleccionado = value;
-                      });
-                    }
+                setState(() {
+                  generoSeleccionado = value;
+                });
+              }
                   : null,
               decoration: InputDecoration(
+                enabled: inputsEnabled,
                 border: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: inputsEnabled ? Colors.grey : Colors.grey.shade800,
                   ),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: inputsEnabled ? Colors.grey : Colors.grey.shade800,
-                  ),
-                ),
-                disabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.grey,
-                  ),
-                ),
               ),
               hint: const Text('Selecciona el género'),
               validator: (value) {
-                return InputsValdiator.validateGender(value!);
+                return InputsValidator.validateGender(value);
               },
             ),
+
             const SizedBox(height: 16),
             Row(
               children: [
@@ -219,27 +214,16 @@ class _MonitorFormState extends State<MonitorForm> {
                                 }
                               : null,
                           decoration: InputDecoration(
+                            enabled: inputsEnabled,
                             border: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: inputsEnabled
-                                    ? Colors.grey
-                                    : Colors.grey.shade800,
+                                color: inputsEnabled ? Colors.grey : Colors.grey.shade800,
                               ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: inputsEnabled
-                                    ? Colors.grey
-                                    : Colors.grey.shade800,
-                              ),
-                            ),
-                            disabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
                             ),
                           ),
                           hint: const Text('Semestre'),
                           validator: (value) {
-                            return InputsValdiator.validateSemester(value!);
+                            return InputsValidator.validateSemester(value);
                           },
                         ),
                       ],
@@ -247,7 +231,7 @@ class _MonitorFormState extends State<MonitorForm> {
                   ),
                   const SizedBox(
                       width:
-                          8), // Se aplica solo si el primer Expanded está presente
+                          8),
                 ],
                 Expanded(
                   child: Column(
@@ -265,7 +249,7 @@ class _MonitorFormState extends State<MonitorForm> {
                         ),
                         enabled: inputsEnabled,
                         validator: (value) {
-                          return InputsValdiator.validateTotalHours(value!);
+                          return InputsValidator.validateTotalHours(value);
                         },
                       ),
                     ],
@@ -299,20 +283,13 @@ class _MonitorFormState extends State<MonitorForm> {
                       ),
                     ],
                   )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
             const SizedBox(height: 32),
             if (widget.showSubmitButton)
-              ElevatedButton(
+              CustomButton(
                 onPressed: _submitForm,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromRGBO(84, 22, 43, 1.000),
-                  minimumSize: const Size(double.infinity, 40),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                ),
-                child: const Text('Guardar Monitor'),
+                isLoading: false,
+                text: 'Guardar Monitor',
               ),
           ],
         ),

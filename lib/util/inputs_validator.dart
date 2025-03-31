@@ -1,4 +1,4 @@
-class InputsValdiator {
+class InputsValidator {
   static String? validateName(String name) {
     if (name.isEmpty) {
       return 'Por favor, ingrese el nombre';
@@ -27,27 +27,27 @@ class InputsValdiator {
     return null;
   }
 
-  static String? validateGender(String gender) {
-    if (gender.isEmpty) {
+  static String? validateGender(String? gender) {
+    if (gender == null) {
       return 'Seleccione un género';
     }
     return null;
   }
 
-  static String? validateSemester(int semester) {
-    if (semester == 0) {
+  static String? validateSemester(int? semester) {
+    if (semester == 0 || semester == null) {
       return 'Seleccione un semestre';
     }
     return null;
   }
 
-  static String? validateTotalHours(String totalHours) {
-    if (totalHours.isEmpty) {
+  static String? validateTotalHours(String? totalHours) {
+    if (totalHours!.isEmpty) {
       return 'Ingrese el total de horas';
     }
 
-    if (int.parse(totalHours) < 0) {
-      return 'El total de horas no puede ser negativo';
+    if (double.parse(totalHours) <= 0.0) {
+      return 'Ingrese una cantidad de horas razonable';
     }
     return null;
   }
@@ -55,6 +55,27 @@ class InputsValdiator {
   static String? validateDate(String date) {
     if (date.isEmpty) {
       return 'Seleccione una fecha';
+    }
+    return null;
+  }
+
+  static String? validateMonitor(int? monitor) {
+    if (monitor == 0 || monitor == null) {
+      return 'Seleccione un monitor';
+    }
+    return null;
+  }
+
+  static String? validateDay(String? day) {
+    if (day == null) {
+      return 'Seleccione una jornada';
+    }
+    return null;
+  }
+
+  static String? validateState(String? state) {
+    if (state == null) {
+      return 'Seleccione un estado';
     }
     return null;
   }

@@ -1,16 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:front_asistencia_monitoria/data/models/attendance_model.dart';
 import '../../data/models/monitor_model.dart';
 import '../../domain/usecases/monitor_usecase.dart';
 
 class MonitorBloc with ChangeNotifier {
-  final MonitorUsecase monitorUsecase;
+  final MonitorUsecase _monitorUsecase;
 
-  bool _isLoadingSemesters = false;
-  bool _isLoadingAttendances = false;
-  bool _isLoadingRegisterAttendance = false;
+  bool _isLoadingMonitors = false;
   List<Monitor> _monitors = [];
   String? message;
   bool? successMessage;
@@ -23,23 +20,23 @@ class MonitorBloc with ChangeNotifier {
   Future<void> fetchMonitors() async {
     _monitors = [];
     try {
-      _isLoadingSemesters = true;
-      _monitors = await monitorUsecase.listMonitors();
+      _isLoadingMonitors = true;
+      _monitors = await _monitorUsecase.listMonitors();
     } catch (e) {
       message = e.toString().replaceAll('Exception: ', '');
       successMessage = false;
     } finally {
-      _isLoadingSemesters = false;
+      _isLoadingMonitors = false;
       Future.microtask(() => notifyListeners());
     }
   }
 
   Future<void> createMonitor(Monitor monitor) async {
     try {
-      Monitor newMonitor = await monitorUsecase.createMonitor(monitor);
+      Monitor newMonitor = await _monitorUsecase.createMonitor(monitor);
       message = 'Monitor creado exitosamente';
       successMessage = true;
-      _monitors.add(newMonitor);
+      _monitors.insert(0, newMonitor);
     } catch (e) {
       message = e.toString().replaceAll('Exception: ', '');
       successMessage = false;
@@ -50,7 +47,7 @@ class MonitorBloc with ChangeNotifier {
 
   Future<void> updateMonitor(Monitor monitor, int id) async {
     try {
-      Monitor updatedMonitor = await monitorUsecase.updateMonitor(monitor, id);
+      Monitor updatedMonitor = await _monitorUsecase.updateMonitor(monitor, id);
       message = 'Monitor actualizado exitosamente';
       successMessage = true;
       _monitors[_monitors.indexWhere(
@@ -65,7 +62,7 @@ class MonitorBloc with ChangeNotifier {
 
   Future<void> deleteMonitor(int id) async {
     try {
-      await monitorUsecase.deleteMonitor(id);
+      await _monitorUsecase.deleteMonitor(id);
       message = 'Monitor eliminado exitosamente';
       successMessage = true;
       _monitors.removeWhere((element) => element.id == id);

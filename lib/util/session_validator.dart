@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../presentation/screens/admin_screen.dart';
-import '../presentation/screens/login_screen.dart';
-import '../presentation/screens/monitor_screen.dart';
+import '../presentation/screens/office/dashboard_screen.dart';
+import '../presentation/screens/login/login_screen.dart';
+import '../presentation/screens/monitor/monitor_screen.dart';
 import '../presentation/viewmodels/storage_bloc.dart';
+
 
 class SessionValidator extends StatelessWidget {
   const SessionValidator({super.key});
@@ -31,7 +32,7 @@ class SessionValidator extends StatelessWidget {
         if (rol == 'Monitor') {
           return const MonitorScreen();
         } else if (rol == 'Admin') {
-          return const AdminScreen();
+          return const DashboardScreen();
         }
 
         return const LoginScreen();

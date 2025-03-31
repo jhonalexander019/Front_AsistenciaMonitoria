@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../../data/models/user_model.dart';
 import '../../domain/usecases/login_usecase.dart';
-import '../screens/admin_screen.dart';
-import '../screens/monitor_screen.dart';
+import '../screens/office/dashboard_screen.dart';
+import '../screens/monitor/monitor_screen.dart';
 import 'storage_bloc.dart';
 
 class LoginBloc with ChangeNotifier {
@@ -37,7 +37,7 @@ class LoginBloc with ChangeNotifier {
       Provider.of<StorageBloc>(context, listen: false).saveUser(user.toJson());
 
       Widget nextScreen =
-          user.rol == 'Monitor' ? const MonitorScreen() : const AdminScreen();
+          user.rol == 'Monitor' ? const MonitorScreen() : const DashboardScreen();
 
       Navigator.pushAndRemoveUntil(
         context,

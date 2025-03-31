@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/models/monitor_model.dart';
-import '../viewmodels/monitor_bloc.dart';
-import '../viewmodels/semester_bloc.dart';
-import '../widgets/custom_bottom_sheet.dart';
-import '../widgets/monitor_form.dart';
-import '../widgets/monitor_schedule_form.dart';
+import '../../../data/models/monitor_model.dart';
+import '../../viewmodels/monitor_bloc.dart';
+import '../../viewmodels/semester_bloc.dart';
+import '../../widgets/custom_bottom_sheet.dart';
+import 'widget/monitor_form.dart';
+import 'widget/monitor_schedule_form.dart';
 
 class ProfileMonitorScreen extends StatefulWidget {
   final Monitor monitor;
@@ -15,10 +15,10 @@ class ProfileMonitorScreen extends StatefulWidget {
   const ProfileMonitorScreen({super.key, required this.monitor});
 
   @override
-  _ProfileMonitorScreenState createState() => _ProfileMonitorScreenState();
+  ProfileMonitorScreenState createState() => ProfileMonitorScreenState();
 }
 
-class _ProfileMonitorScreenState extends State<ProfileMonitorScreen> {
+class ProfileMonitorScreenState extends State<ProfileMonitorScreen> {
   GlobalKey _key = GlobalKey();
 
   late SemesterBloc _semesterBloc;

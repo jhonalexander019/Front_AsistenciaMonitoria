@@ -79,12 +79,13 @@ class TimeControl extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        monitor['nombre'],
+                                        _truncateWithEllipsis('${monitor['nombre']} ${monitor['apellido']}', 15),
                                         style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                         ),
                                         overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                       ),
                                       Text(
                                         '${double.tryParse(horasTrabajadas.toString())?.toStringAsFixed(1) ?? "0.00"}/$totalHoras',
@@ -113,4 +114,9 @@ class TimeControl extends StatelessWidget {
       ],
     );
   }
+
+  String _truncateWithEllipsis(String text, int maxLength) {
+    return (text.length > maxLength) ? '${text.substring(0, maxLength)}...' : text;
+  }
+
 }

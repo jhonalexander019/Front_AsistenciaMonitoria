@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/models/semester_model.dart';
-import '../viewmodels/semester_bloc.dart';
-import '../widgets/attendance_table.dart';
-import '../widgets/custom_bottom_sheet.dart';
-import '../widgets/hours_semester_cards.dart';
-import '../widgets/semester_form.dart';
-import '../widgets/time_control.dart';
+import '../../../data/models/semester_model.dart';
+import '../../viewmodels/admin_bloc.dart';
+import '../../viewmodels/assistance_bloc.dart';
+import '../../viewmodels/semester_bloc.dart';
+import '../assistance/widget/assistance_list.dart';
+import '../../widgets/custom_bottom_sheet.dart';
+import '../office/widget/time_control.dart';
+import 'widget/hours_semester_cards.dart';
+import 'widget/semester_form.dart';
 
 class ProfileSemesterScreen extends StatefulWidget {
   final Semester semester;
@@ -15,22 +17,26 @@ class ProfileSemesterScreen extends StatefulWidget {
   const ProfileSemesterScreen({super.key, required this.semester});
 
   @override
-  _ProfileSemesterScreenState createState() => _ProfileSemesterScreenState();
+  ProfileSemesterScreenState createState() => ProfileSemesterScreenState();
 }
 
-class _ProfileSemesterScreenState extends State<ProfileSemesterScreen> {
-  GlobalKey _key = GlobalKey();
+class ProfileSemesterScreenState extends State<ProfileSemesterScreen> {
+  final GlobalKey _key = GlobalKey();
 
   late SemesterBloc _semesterBloc;
+  late AdminBloc _adminBloc;
+  late AssistanceBloc _assistanceBloc;
 
   @override
   void initState() {
     super.initState();
 
     _semesterBloc = Provider.of<SemesterBloc>(context, listen: false);
+    _adminBloc = Provider.of<AdminBloc>(context, listen: false);
+    _assistanceBloc = Provider.of<AssistanceBloc>(context, listen: false);
 
-    _semesterBloc.fetchProgressMonitor(widget.semester.id!);
-    _semesterBloc.attendanceHistory(widget.semester.id!);
+    _adminBloc.fetchProgressMonitor(semestreId: widget.semester.id!);
+    _assistanceBloc.fetchAssistance(id: widget.semester.id!);
     _semesterBloc.fetchSemesterHours(widget.semester.id!);
   }
 
@@ -49,7 +55,7 @@ class _ProfileSemesterScreenState extends State<ProfileSemesterScreen> {
           children: [
             Text(
               'Semester ${widget.semester.nombre}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -97,14 +103,14 @@ class _ProfileSemesterScreenState extends State<ProfileSemesterScreen> {
                   HoursSemesterCards(hoursSemester: semesterBloc.hoursSemester),
                   const SizedBox(height: 20),
                   TimeControl(
-                    isLoading: semesterBloc.isLoadingProgressMonitor,
-                    dataIsNull: semesterBloc.progressMonitors?.isEmpty ?? true,
-                    horasList: semesterBloc.progressMonitors ?? [],
+                    isLoading: _adminBloc.isLoadingProgressMonitor,
+                    dataIsNull: _adminBloc.progressMonitors?.isEmpty ?? true,
+                    horasList: _adminBloc.progressMonitors ?? [],
                   ),
                   const SizedBox(height: 20),
                   const Text("Asistencias", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
-                  AttendanceTable(attendances: semesterBloc.attendances!, isLoading: semesterBloc.isLoadingAttendances),
+                  AssistanceList(assistances: _assistanceBloc.assistances!, isLoading: _assistanceBloc.isLoadingAssistance),
                 ],
               ),
             );

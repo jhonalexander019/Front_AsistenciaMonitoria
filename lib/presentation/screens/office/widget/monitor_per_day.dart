@@ -43,12 +43,12 @@ class MonitorPerDay extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Row(
+                          const Row(
                             children: [
-                              const Icon(Icons.wb_sunny,
+                              Icon(Icons.wb_sunny,
                                   color: Colors.yellowAccent),
-                              const SizedBox(width: 8),
-                              const Text(
+                              SizedBox(width: 8),
+                              Text(
                                 'Mañana',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -72,12 +72,12 @@ class MonitorPerDay extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Row(
+                          const Row(
                             children: [
-                              const Icon(Icons.nightlight_round,
+                              Icon(Icons.nightlight_round,
                                   color: Colors.yellowAccent),
-                              const SizedBox(height: 8),
-                              const Text(
+                              SizedBox(height: 8),
+                              Text(
                                 'Tarde',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(

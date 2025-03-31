@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:front_asistencia_monitoria/util/inputs_validator.dart';
 
-import '../../data/models/semester_model.dart';
+import '../../../../data/models/semester_model.dart';
+import '../../../../util/inputs_validator.dart';
+
 
 class SemesterForm extends StatefulWidget {
   final Function(Semester semester) onCreate;
@@ -10,10 +11,10 @@ class SemesterForm extends StatefulWidget {
   const SemesterForm({super.key, required this.onCreate, this.semestre});
 
   @override
-  _SemesterFormState createState() => _SemesterFormState();
+  SemesterFormState createState() => SemesterFormState();
 }
 
-class _SemesterFormState extends State<SemesterForm> {
+class SemesterFormState extends State<SemesterForm> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController nombreController;
   late TextEditingController fechaInicioController;
@@ -81,7 +82,7 @@ class _SemesterFormState extends State<SemesterForm> {
               ),
               keyboardType: TextInputType.number,
               validator: (value) {
-                return InputsValdiator.validateName(value!);
+                return InputsValidator.validateName(value!);
               },
             ),
             const SizedBox(height: 16),
@@ -100,7 +101,7 @@ class _SemesterFormState extends State<SemesterForm> {
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
-                          return InputsValdiator.validateDate(value!);
+                          return InputsValidator.validateDate(value!);
                         },
                       ),
                     ),
@@ -120,7 +121,7 @@ class _SemesterFormState extends State<SemesterForm> {
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
-                          return InputsValdiator.validateDate(value!);
+                          return InputsValidator.validateDate(value!);
                         },
                       ),
                     ),

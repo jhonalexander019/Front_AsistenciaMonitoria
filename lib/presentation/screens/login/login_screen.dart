@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../viewmodels/login_bloc.dart';
-import '../widgets/build_error_message_listener.dart';
-import '../widgets/login_form.dart';
+import '../../viewmodels/login_bloc.dart';
+import '../../widgets/build_error_message_listener.dart';
+import 'widget/login_form.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends State<LoginScreen> {
   late LoginBloc _loginBloc;
 
   @override
@@ -31,9 +32,9 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Column(
+              const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(

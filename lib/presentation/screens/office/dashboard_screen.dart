@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-import '../../util/option_menu_validator.dart';
-import '../widgets/navigator_bar.dart';
+import '../../../util/option_menu_validator.dart';
+import '../../widgets/navigator_bar.dart';
 
-class AdminScreen extends StatefulWidget {
-  const AdminScreen({super.key});
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
 
   @override
-  _AdminScreenState createState() => _AdminScreenState();
+  DashboardScreenState createState() => DashboardScreenState();
 }
 
-class _AdminScreenState extends State<AdminScreen> {
+class DashboardScreenState extends State<DashboardScreen> {
   int _currentIndex = 0;
 
   @override

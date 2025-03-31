@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/models/monitor_model.dart';
+import '../../../../data/models/monitor_model.dart';
 
 class MonitorScheduleForm extends StatefulWidget {
   final Function(Monitor monitor) onUpdate;
@@ -13,10 +13,10 @@ class MonitorScheduleForm extends StatefulWidget {
   });
 
   @override
-  _MonitorScheduleFormState createState() => _MonitorScheduleFormState();
+  MonitorScheduleFormState createState() => MonitorScheduleFormState();
 }
 
-class _MonitorScheduleFormState extends State<MonitorScheduleForm> {
+class MonitorScheduleFormState extends State<MonitorScheduleForm> {
   late Map<String, Map<String, bool>> schedule;
 
   @override
@@ -104,7 +104,7 @@ class _MonitorScheduleFormState extends State<MonitorScheduleForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ...schedule.keys.map((day) => _buildDayRow(day)).toList(),
+          ...schedule.keys.map((day) => _buildDayRow(day)),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: _submitForm,

@@ -1,0 +1,2 @@
+D:/Laboral/Monitorias/Sistemas/Front_AsistenciaMonitoria/android/app/.cxx/Debug/l92b3l30/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/Laboral/Monitorias/Sistemas/Front_AsistenciaMonitoria/android/app/.cxx/Debug/l92b3l30/armeabi-v7a/CMakeFiles/rebuild_cache.dir

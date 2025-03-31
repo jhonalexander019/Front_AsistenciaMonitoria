@@ -1,0 +1,2 @@
+D:/Laboral/Monitorias/Sistemas/Front_AsistenciaMonitoria/android/app/.cxx/Debug/276y6913/x86_64/CMakeFiles/edit_cache.dir
+D:/Laboral/Monitorias/Sistemas/Front_AsistenciaMonitoria/android/app/.cxx/Debug/276y6913/x86_64/CMakeFiles/rebuild_cache.dir

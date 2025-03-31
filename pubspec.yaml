@@ -37,12 +37,16 @@ dependencies:
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
   http: ^1.2.2
-  shared_preferences: ^2.3.3
+  shared_preferences: ^2.5.3
   intl: ^0.20.1
   flutter_svg: ^2.0.16
   connectivity_plus: ^5.0.2
 
+  flutter_native_splash: ^2.4.5
+  flutter_launcher_icons: ^0.14.3
+
 dev_dependencies:
+
   flutter_test:
     sdk: flutter
 
@@ -96,3 +100,32 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  # To add icons to your application, add an icons section, like this:
+  # command:  flutter pub run flutter_launcher_icons
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/iconStatic.png"
+  adaptive_icon_background: "assets/images/fondo.png"
+  adaptive_icon_foreground: "assets/images/icon.png"
+  remove_alpha_ios: true
+
+# To add splash screens to your application, add a splash_screen section, like this:
+# command:  flutter pub run flutter_native_splash:create
+flutter_native_splash:
+  color: "#521429"
+  image: assets/images/splash.png
+  color_dark: "#521429"
+  image_dark: assets/images/splash.png
+
+  android_gravity: center
+  ios_content_mode: scaleAspectFit
+
+  android_12:
+    image: assets/images/splash.png
+    image_dark: assets/images/splash.png
+    icon_background_color: "#521429"
+    icon_background_color_dark: "#521429"
+
+  web: false
